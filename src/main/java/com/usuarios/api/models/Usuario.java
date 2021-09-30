@@ -11,6 +11,9 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
+
 @Entity
 @Table(name="usuarios")
 public class Usuario implements Serializable {
@@ -27,6 +30,7 @@ public class Usuario implements Serializable {
 	@NotBlank(message = "Campo não pode ser vazio")
 	String email;
 	@NotBlank(message = "Campo não pode ser vazio")
+	@JsonProperty(access = Access.WRITE_ONLY)
 	String senha;
 	
 	public long getId() {

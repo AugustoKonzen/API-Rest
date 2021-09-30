@@ -32,7 +32,7 @@ public class UsuarioService {
 		usuario.delete(user);
 	}
 	
-	public Optional<Usuario> login(String email) {
+	public Optional<Usuario> validarSenha(String email) {
 		return usuario.findByEmail(email);
 	}
 }

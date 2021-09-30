@@ -64,9 +64,9 @@ public class UsuarioResource {
 		return ResponseEntity.ok("Usuário cadastrado com sucesso");
 	}
 	
-	@GetMapping("/login")
+	@GetMapping("/validarSenha")
 	public ResponseEntity<Boolean> validarSenha(@RequestParam String email, @RequestParam String senha) {
-		Optional<Usuario> optUsuario = usuarioService.login(email);
+		Optional<Usuario> optUsuario = usuarioService.validarSenha(email);
 		if (optUsuario.get() == null) {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(false);
 		}
