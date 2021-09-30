@@ -3,6 +3,7 @@ package com.usuarios.api.resources;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.validation.Valid;
 
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -60,6 +62,20 @@ public class UsuarioResource {
 		user.setSenha(encoder.encode(user.getSenha()));
 		usuarioService.save(user);
 		return ResponseEntity.ok("Usuário cadastrado com sucesso");
+	}
+	
+	@GetMapping("/login")
+	public ResponseEntity<Boolean> validarSenha(@RequestParam String email, @RequestParam String senha) {
+		Optional<Usuario> optUsuario = usuarioService.login(email);
+		if (optUsuario.get() == null) {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(false);
+		}
+		
+		Usuario user = optUsuario.get();
+        boolean valido = encoder.matches(senha, user.getSenha());
+
+        HttpStatus status = (valido) ? HttpStatus.OK : HttpStatus.UNAUTHORIZED;
+        return ResponseEntity.status(status).body(valido);
 	}
 	
 	@DeleteMapping("/remover")

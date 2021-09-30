@@ -1,6 +1,7 @@
 package com.usuarios.api.services;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,5 +30,9 @@ public class UsuarioService {
 	
 	public void delete(Usuario user) {
 		usuario.delete(user);
+	}
+	
+	public Optional<Usuario> login(String email) {
+		return usuario.findByEmail(email);
 	}
 }
