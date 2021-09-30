@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.usuarios.api.repository.UsuarioRepository;
+import com.usuarios.api.services.UsuarioService;
 
 import lombok.AllArgsConstructor;
 
@@ -33,42 +34,43 @@ import com.usuarios.api.models.Usuario;
 @RequestMapping(value="/api/usuarios")
 public class UsuarioResource {
 	@Autowired
-	private UsuarioRepository usuario;
+	private UsuarioService usuarioService;
+	
 	private PasswordEncoder encoder;
 	
-	public UsuarioResource(UsuarioRepository usuario, PasswordEncoder encoder) {
-		this.usuario = usuario;
+	public UsuarioResource(UsuarioService usuario, PasswordEncoder encoder) {
+		this.usuarioService = usuario;
 		this.encoder = encoder;
 	}
 	
 	@GetMapping("/selectAll")
 	public ResponseEntity<List<Usuario>> selectTodos() {
-		List<Usuario> lista = usuario.findAll();
+		List<Usuario> lista = usuarioService.findAll();
 		return ResponseEntity.ok().body(lista);
 	}
 	
 	@GetMapping(value = "/{id}")
 	public ResponseEntity<Usuario> selectPorId(@PathVariable(value="id") long id) {
-		Usuario user = usuario.findById(id);
+		Usuario user = usuarioService.findById(id);
 		return ResponseEntity.ok().body(user);
 	}
 	
 	@PostMapping("/cadastrar")
 	public ResponseEntity<String> cadastrar(@RequestBody @Valid Usuario user) {
 		user.setSenha(encoder.encode(user.getSenha()));
-		usuario.save(user);
+		usuarioService.save(user);
 		return ResponseEntity.ok("Usuário cadastrado com sucesso");
 	}
 	
 	@DeleteMapping("/remover")
 	public ResponseEntity<String> remover(@RequestBody Usuario user) {
-		usuario.delete(user);
+		usuarioService.delete(user);
 		return ResponseEntity.ok("Usuário removido com sucesso");
 	}
 	
 	@PutMapping("/alterar")
 	public ResponseEntity<String> alterar(@RequestBody Usuario user) {
-		usuario.save(user);
+		usuarioService.save(user);
 		return ResponseEntity.ok("Usuário alterado com sucesso");
 	}
 	
